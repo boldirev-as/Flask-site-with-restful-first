@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+   table {
+    width: 100%; /* Ширина таблицы */
+    border-spacing: 7px 11px; /* Расстояние между ячейками */
+   }
+   td {
+    padding: 5px; /* Поля вокруг текста */
+   }
+
+</style>
+
+<h4>Work log</h4>
+{% if current_user.is_authenticated %}
+<a href="addjob" class="btn btn-secondary">Добавить работу</a>
+{% endif %}
+
+<a href="department" class="btn btn-secondary">Обратно в департамент</a>
+
+<div>
+    {% for job in jobs %}
+
+    <h5>Action #{{ job.id }}</h5>
+    <table>
+        <tr>
+            <th>Title of activity</th>
+            <th>Team Leader</th>
+            <th>Duration</th>
+            <th>List of collaborators</th>
+            <th>Is finished</th>
+        </tr>
+        <tr>
+            <td>{{job.job}}</td>
+            <td>{{job.team_leader}}</td>
+            <td>{{job.work_size}}</td>
+            <td>{{job.collaborators}}</td>
+            <td>{{job.is_finished}}</td>
+        </tr>
+    </table>
+
+    {% if current_user.is_authenticated and (current_user.id == 1 or job.team_leader == current_user.id) %}
+    <div>
+        <a href="/news/{{ job.id }}" class="btn btn-warning">
+            Изменить
+        </a>
+        <a href="/news_delete/{{ job.id }}" class="btn btn-danger">
+            Удалить
+        </a>
+    </div>
+    {% endif %}
+
+    <br><br>
+
+    {% endfor %}
+</div>
+
+{% endblock %}
